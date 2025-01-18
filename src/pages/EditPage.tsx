@@ -1,7 +1,14 @@
 import React from "react";
+import EditArea from "../components/EditArea";
 
 const EditPage = () => {
-  return <div>계정정보 수정</div>;
+  return (
+    <>
+      <div>
+        <EditArea />
+      </div>
+    </>
+  );
 };
 
 export default EditPage;
