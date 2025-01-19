@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { getUserApi } from "./apis/auth";
 import { useAuthStore } from "./stores/auth.store";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import * as Sentry from "@sentry/react";
 
 const queryClient = new QueryClient();
 
@@ -36,26 +37,28 @@ function App() {
     }
   }, []);
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/account" element={<AccountPage />} />
+    <Sentry.ErrorBoundary fallback={<p>An error has occurred</p>}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/account" element={<AccountPage />} />
 
-          <Route
-            path="/edit"
-            element={
-              <PrivateRoute>
-                <EditPage />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </Router>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+            <Route
+              path="/edit"
+              element={
+                <PrivateRoute>
+                  <EditPage />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </Router>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </Sentry.ErrorBoundary>
   );
 }
 

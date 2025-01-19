@@ -1,10 +1,6 @@
-import { useAuthStore } from "../stores/auth.store";
-
-export const TOKEN_KEY = "access_token";
-
-export const getToken = localStorage.getItem(TOKEN_KEY);
+export const getToken = localStorage.getItem("access_token");
 // export const getToken = useAuthStore.getState().accessToken;
 
 export const setToken = (token: string) =>
-  localStorage.setItem(TOKEN_KEY, token);
-export const removeToken = () => localStorage.removeItem(TOKEN_KEY);
+  localStorage.setItem("access_token", token);
+export const removeToken = () => localStorage.removeItem("access_token");

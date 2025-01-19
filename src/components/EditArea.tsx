@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { editUserApi, getUserApi } from "../apis/auth";
 import { EditForm } from "../types/authType";
 import { useAuthStore } from "../stores/auth.store";
+import { useQueryClient } from "@tanstack/react-query";
 
 const EditArea = () => {
+  const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ const EditArea = () => {
   const editMutation = useMutation({
     mutationFn: editUserApi,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       alert("회원정보 수정에 성공했습니다!");
       navigate("/");
     },

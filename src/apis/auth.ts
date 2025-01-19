@@ -1,6 +1,10 @@
 import { LoginForm, LoginResponse, User } from "../types/authType";
 import { useAuthStore } from "../stores/auth.store";
 import { axiosInstance } from "./axios";
+import { useQueryClient } from "@tanstack/react-query";
+import * as Sentry from "@sentry/react";
+
+const queryClient = useQueryClient();
 
 //가입
 export const registerApi = async (formData: FormData) => {
@@ -29,7 +33,8 @@ export const loginApi = async (data: LoginForm) => {
   }
 
   if (!response) {
-    throw new Error("로그인 Api 에러");
+    Sentry.captureException(Error);
+    throw new Error("로그인 중 오류가 발생했습니다");
   }
   return response.data;
 };
@@ -39,6 +44,7 @@ export const loginApi = async (data: LoginForm) => {
 export const logoutApi = () => {
   localStorage.removeItem("accessToken");
   useAuthStore.getState().logout();
+  queryClient.removeQueries({ queryKey: ["user"] });
 };
 
 //조회

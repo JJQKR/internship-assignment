@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../apis/auth";
 import { useAuthStore } from "../stores/auth.store";
+import { useQueryClient } from "@tanstack/react-query";
 
 const LoginArea = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     id: "",
@@ -16,6 +18,8 @@ const LoginArea = () => {
   const loginMutation = useMutation({
     mutationFn: loginApi,
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+
       setAuth(data.accessToken, {
         id: data.userId,
         nickname: data.nickname,
