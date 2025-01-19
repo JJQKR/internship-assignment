@@ -1,1 +1,1 @@
-export const BASE_URL = "https://moneyfulpublicpolicy.co.kr";
+export const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
