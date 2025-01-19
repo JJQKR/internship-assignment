@@ -5,7 +5,7 @@ import App from "./App.tsx";
 import * as Sentry from "@sentry/react";
 
 Sentry.init({
-  dsn: "https://88a6d03d2c11a1a92b0bba22c55839b5@o4508669926768640.ingest.us.sentry.io/4508669932732416", // Sentry가 제공한 DSN
+  dsn: "https://88a6d03d2c11a1a92b0bba22c55839b5@o4508669926768640.ingest.us.sentry.io/4508669932732416",
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration(),

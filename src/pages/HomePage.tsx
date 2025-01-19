@@ -20,6 +20,15 @@ const HomePage = () => {
         {user ? `${user.nickname}` : "게스트"}님 환영합니다
       </div>
 
+      <button
+        onClick={() => {
+          throw new Error("Sentry 테스트 에러!");
+        }}
+        className="text-red-400"
+      >
+        Sentry 에러 테스트
+      </button>
+
       {!user ? (
         <div>
           <button
