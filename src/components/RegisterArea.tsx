@@ -12,7 +12,7 @@ const RegisterArea = () => {
     password: "",
     passwordConfirm: "",
     nickname: "",
-    avatar: "",
+    avatar: null,
   });
 
   const registerMutation = useMutation({
@@ -29,6 +29,14 @@ const RegisterArea = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("id", newUserData.id);
+    formData.append("password", newUserData.password);
+    formData.append("nickname", newUserData.nickname);
+    if (newUserData.avatar) {
+      formData.append("avatar", newUserData.avatar);
+    }
 
     if (newUserData.id.length < 5) {
       alert("ID는 최소 5자 이상이어야 합니다.");
@@ -50,8 +58,7 @@ const RegisterArea = () => {
       return;
     }
 
-    const { passwordConfirm, ...registerData } = newUserData;
-    registerMutation.mutate(registerData);
+    registerMutation.mutate(formData);
   };
 
   return (
@@ -66,19 +73,18 @@ const RegisterArea = () => {
               프로필 이미지
             </label>
             <input
+              required
               id="avatar"
               name="avatar"
               type="file"
-              value={newUserData.avatar}
-              onChange={(event) =>
-                setNewUserData((prev) => ({
-                  ...prev,
-                  avatar: event.target.value,
-                }))
-              }
-              placeholder="프로필 이미지를 업로드해주세요"
-              className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              required
+              onChange={(event) => {
+                if (event.target.files?.[0]) {
+                  setNewUserData((prev) => ({
+                    ...prev,
+                    avatar: event.target.files?.[0],
+                  }));
+                }
+              }}
             />
           </div>
 
@@ -158,7 +164,7 @@ const RegisterArea = () => {
             <input
               id="passwordConfirm"
               name="passwordConfirm"
-              type="text"
+              type="password"
               onChange={(event) =>
                 setNewUserData((prev) => ({
                   ...prev,
@@ -178,7 +184,7 @@ const RegisterArea = () => {
             disabled={registerMutation.isPending}
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
           >
-            {registerMutation.isPending ? "처리 중입니다" : "수정하기"}
+            {registerMutation.isPending ? "처리 중입니다" : "가입하기"}
           </button>
         </div>
       </form>

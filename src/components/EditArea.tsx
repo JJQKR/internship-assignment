@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { editUserApi, getUserApi } from "../apis/auth";
 import { EditForm } from "../types/authType";
+import { useAuthStore } from "../stores/auth.store";
 
 const EditArea = () => {
+  const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
 
   const [editedUserData, setEditedUserData] = useState<EditForm>({
@@ -18,6 +20,15 @@ const EditArea = () => {
     queryKey: ["user"],
     queryFn: getUserApi,
   });
+
+  useEffect(() => {
+    if (user) {
+      setEditedUserData((prev) => ({
+        ...prev,
+        nickname: user.nickname,
+      }));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (currentUserData) {
@@ -43,19 +54,26 @@ const EditArea = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
-    const formData = new FormData();
-    if (editedUserData.avatar) {
-      formData.append("avatar", editedUserData.avatar);
-    }
-
     if (editedUserData.password !== editedUserData.passwordConfirm) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-    
-    const { passwordConfirm, ...dateToUpdate } = editedUserData;
-    editMutation.mutate(dateToUpdate);
+
+    const formData = new FormData();
+
+    if (editedUserData.avatar) {
+      formData.append("avatar", editedUserData.avatar);
+    }
+
+    if (editedUserData.nickname) {
+      formData.append("nickname", editedUserData.nickname);
+    }
+
+    if (editedUserData.password) {
+      formData.append("password", editedUserData.password);
+    }
+
+    editMutation.mutate(formData);
   };
   return (
     <div>
@@ -145,8 +163,8 @@ const EditArea = () => {
                 if (event.target.files?.[0]) {
                   setEditedUserData((prev) => ({
                     ...prev,
-                    avatar: event.target.files?[0]
-                  }))
+                    avatar: event.target.files?.[0],
+                  }));
                 }
               }}
             />
@@ -159,7 +177,7 @@ const EditArea = () => {
             disabled={editMutation.isPending}
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
           >
-            {editMutation.isPending ? "수정 중입니다" : "정보 수정"}
+            {editMutation.isPending ? "수정 중입니다" : "수정하기"}
           </button>
         </div>
       </form>

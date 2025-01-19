@@ -1,4 +1,3 @@
-import React from "react";
 import RegisterArea from "../components/RegisterArea";
 
 const RegisterPage = () => {

@@ -1,26 +1,60 @@
-import React from "react";
-import RegisterArea from "../components/RegisterArea";
-import LoginArea from "../components/LoginArea";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../stores/auth.store";
+import { GrUserSettings } from "react-icons/gr";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("accessToken");
+    navigate("/");
+  };
   return (
     <>
-      <h2 className="text-purple-500">강연주 한 달 인턴 온보딩 과제</h2>
-      <div>❤️ 님 환영합니다</div>
-
-      <div>
-        <button>로그인</button>
-      </div>
-      <div>
-        {" "}
-        <button>로그아웃</button>
+      <h1 className="text-purple-500 font-bold m-4 text-xl">
+        강연주 한 달 인턴 온보딩 과제
+      </h1>
+      <div className="m-4 font-semibold text-lg">
+        {user ? `${user.nickname}` : "게스트"}님 환영합니다
       </div>
 
+      {!user ? (
+        <div>
+          <button
+            onClick={() => navigate("/login")}
+            className="p-2 m-2 bg-indigo-400 text-white rounded-sm"
+          >
+            로그인
+          </button>
+        </div>
+      ) : (
+        <div>
+          <button
+            onClick={handleLogout}
+            className="p-2 m-2 bg-indigo-400 text-white rounded-sm"
+          >
+            로그아웃
+          </button>
+        </div>
+      )}
+
       <div>
-        <button>회원 가입</button>
+        <button
+          onClick={() => navigate("register")}
+          className="p-2 m-2 bg-indigo-400 text-white rounded-sm"
+        >
+          회원 가입
+        </button>
       </div>
-      <RegisterArea />
-      <LoginArea />
+
+      <button
+        onClick={() => navigate("/edit")}
+        className="p-2 m-2 bg-indigo-400 text-white rounded-sm"
+      >
+        <GrUserSettings />
+      </button>
     </>
   );
 };

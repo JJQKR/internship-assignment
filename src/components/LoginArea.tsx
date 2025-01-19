@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../apis/auth";
+import { useAuthStore } from "../stores/auth.store";
 
 const LoginArea = () => {
   const navigate = useNavigate();
@@ -10,11 +11,17 @@ const LoginArea = () => {
     password: "",
   });
 
+  const setAuth = useAuthStore((state) => state.setAuth);
+
   const loginMutation = useMutation({
     mutationFn: loginApi,
     onSuccess: (data) => {
+      setAuth(data.accessToken, {
+        id: data.userId,
+        nickname: data.nickname,
+        avatar: data.avatar,
+      });
       alert("로그인에 성공했습니다!");
-      // 토큰 지정 로직 필요
       navigate("/");
     },
     onError: (error) => {
