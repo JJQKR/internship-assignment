@@ -4,8 +4,6 @@ import { axiosInstance } from "./axios";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Sentry from "@sentry/react";
 
-const queryClient = useQueryClient();
-
 //가입
 export const registerApi = async (formData: FormData) => {
   const response = await axiosInstance.post("/register", formData, {
@@ -42,6 +40,7 @@ export const loginApi = async (data: LoginForm) => {
 // 로그아웃
 
 export const logoutApi = () => {
+  const queryClient = useQueryClient();
   localStorage.removeItem("accessToken");
   useAuthStore.getState().logout();
   queryClient.removeQueries({ queryKey: ["user"] });
